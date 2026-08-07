@@ -1,24 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using Origen.Api.Data;
+using Origen.Api.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Controllers
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// CORS
+builder.Services.AddCorsConfiguration(builder.Configuration);
+
+// Swagger
+builder.Services.AddSwaggerDocumentation();
+
+// Database
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
 
+// CORS
+app.UseCors(CorsExtensions.DefaultPolicy);
+
+// Authentication / Authorization
 app.UseAuthorization();
 
+// Endpoints
 app.MapControllers();
 
 app.Run();
