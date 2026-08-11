@@ -12,7 +12,7 @@ using Origen.Api.Data;
 namespace Origen.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260806233752_InitialCreate")]
+    [Migration("20260810205700_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,8 +33,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -48,8 +50,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.HasKey("Id");
 
@@ -67,8 +71,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -82,8 +88,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.HasKey("Id");
 
@@ -118,8 +126,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -150,8 +160,10 @@ namespace Origen.Api.Migrations
                         .HasColumnName("password_hash");
 
                     b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Username")
                         .IsRequired()

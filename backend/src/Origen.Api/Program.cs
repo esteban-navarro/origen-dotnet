@@ -1,17 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Origen.Api.Data;
 using Origen.Api.Extensions;
+using Origen.Api.Modules.Auth.Bootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services.AddControllers();
 
-// CORS
-builder.Services.AddCorsConfiguration(builder.Configuration);
-
-// Swagger
-builder.Services.AddSwaggerDocumentation();
+// Application
+builder.Services.AddApplicationConfiguration(builder.Configuration);
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -20,7 +18,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IApplicationDbContext>(
+    provider => provider.GetRequiredService<ApplicationDbContext>());
+
 var app = builder.Build();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    AdminUserInitializer initializer =
+        scope.ServiceProvider
+            .GetRequiredService<AdminUserInitializer>();
+
+    await initializer.InitializeAsync();
+}
 
 // Swagger
 if (app.Environment.IsDevelopment())
@@ -34,6 +44,7 @@ app.UseHttpsRedirection();
 app.UseCors(CorsExtensions.DefaultPolicy);
 
 // Authentication / Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Endpoints

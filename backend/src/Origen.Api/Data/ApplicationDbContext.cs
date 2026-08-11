@@ -3,9 +3,12 @@ using Origen.Api.Modules.Auth.Entities;
 
 namespace Origen.Api.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext
+    : DbContext,
+      IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
@@ -24,6 +27,7 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly);
     }
 }

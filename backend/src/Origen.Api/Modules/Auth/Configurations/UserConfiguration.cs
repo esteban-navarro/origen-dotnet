@@ -52,10 +52,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.CreatedAt)
                .HasColumnName("created_at")
+               .HasDefaultValueSql("SYSUTCDATETIME()")
                .IsRequired();
 
         builder.Property(x => x.UpdatedAt)
                .HasColumnName("updated_at")
+               .HasDefaultValueSql("SYSUTCDATETIME()")
                .IsRequired();
     }
 }
