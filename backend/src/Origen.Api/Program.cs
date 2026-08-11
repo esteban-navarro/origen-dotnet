@@ -1,23 +1,53 @@
+using Microsoft.EntityFrameworkCore;
+using Origen.Api.Data;
+using Origen.Api.Extensions;
+using Origen.Api.Modules.Auth.Bootstrap;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers
 builder.Services.AddControllers();
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Application
+builder.Services.AddApplicationConfiguration(builder.Configuration);
+
+// Database
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddScoped<IApplicationDbContext>(
+    provider => provider.GetRequiredService<ApplicationDbContext>());
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    AdminUserInitializer initializer =
+        scope.ServiceProvider
+            .GetRequiredService<AdminUserInitializer>();
+
+    await initializer.InitializeAsync();
+}
+
+// Swagger
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
 
+// CORS
+app.UseCors(CorsExtensions.DefaultPolicy);
+
+// Authentication / Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Endpoints
 app.MapControllers();
 
 app.Run();
