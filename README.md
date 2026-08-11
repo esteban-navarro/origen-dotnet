@@ -5,28 +5,16 @@
 <h1 align="center">ORIGEN</h1>
 
 <p align="center">
-<b>Enterprise Full Stack Platform built with ASP.NET Core and Angular</b>
+<b>Enterprise Full Stack Platform built with ASP.NET Core 9 and Angular 20</b>
 </p>
 
-<p align="center">
-
-.NET 9 • ASP.NET Core • Angular 20 • SQL Server • JWT • Entity Framework Core
-
-</p>
+<p align="center">ASP.NET Core 9 • Angular 20 • SQL Server • Entity Framework Core • JWT</p>
 
 ---
 
-# Overview
-
-ORIGEN is a modern enterprise Full Stack platform developed to demonstrate production-ready software architecture using **.NET 9**, **ASP.NET Core**, **Angular 20**, **Entity Framework Core**, **SQL Server**, and **JWT Authentication**.
+ORIGEN is a modern enterprise Full Stack platform developed to demonstrate production-ready software architecture using **ASP.NET Core 9**, **Angular 20**, **Entity Framework Core**, **SQL Server**, and **JWT Authentication**.
 
 The project focuses on clean architecture, modularity, maintainability, secure authentication, and enterprise software development best practices.
-
----
-
-# Current Version
-
-**v1.0.0 – Initial ASP.NET Core Release**
 
 ---
 
