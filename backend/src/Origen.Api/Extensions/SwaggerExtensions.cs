@@ -11,9 +11,14 @@ public static class SwaggerExtensions
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Origen API",
-                Version = "v1",
-                Description = "Backend API for the Origen Full Stack application."
+                Title = "ORIGEN API",
+                Version = "v1.0.0",
+                Description = "Modern Enterprise REST API built with ASP.NET Core 9.",
+                License = new OpenApiLicense
+                {
+                    Name = "MIT License",
+                    Url = new Uri("https://opensource.org/licenses/MIT")
+                }
             });
         });
 
@@ -28,7 +33,7 @@ public static class SwaggerExtensions
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Origen API v1");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ORIGEN API v1.0.0");
                 options.RoutePrefix = "swagger";
             });
 

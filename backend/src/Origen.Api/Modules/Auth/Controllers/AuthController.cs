@@ -16,12 +16,21 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login(
-        LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {
-        LoginResponse response =
-            await _authService.LoginAsync(request);
+        try
+        {
+            LoginResponse response =
+                await _authService.LoginAsync(request);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new
+            {
+                message = "Invalid username or password."
+            });
+        }
     }
 }
