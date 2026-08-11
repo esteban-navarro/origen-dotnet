@@ -18,4 +18,6 @@ public interface IJwtService
     bool IsTokenValid(
         string token,
         User user);
+
+    long GetExpirationInSeconds();
 }

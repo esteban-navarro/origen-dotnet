@@ -23,8 +23,7 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        User? user =
-            await _userRepository.FindByUsernameAsync(request.Username);
+        User? user = await _userRepository.FindByUsernameAsync(request.Username);
 
         if (user is null)
         {
@@ -33,9 +32,9 @@ public class AuthService : IAuthService
         }
 
         bool validPassword =
-        _passwordHasher.Verify(
-            request.Password,
-            user.PasswordHash);
+            _passwordHasher.Verify(
+                request.Password,
+                user.PasswordHash);
 
         if (!validPassword)
         {
@@ -43,10 +42,35 @@ public class AuthService : IAuthService
                 "Invalid username or password.");
         }
 
-        string accessToken =
-            _jwtService.GenerateToken(user);
+        string accessToken = _jwtService.GenerateToken(user);
 
-        throw new NotImplementedException();
+        AuthenticatedUserResponse authenticatedUser = new()
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+
+            Roles = user.UserRoles
+                .Select(ur => ur.Role.Name)
+                .Distinct()
+                .ToList(),
+
+            Permissions = user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(rp => rp.Permission.Name)
+                .Distinct()
+                .ToList()
+        };
+
+        return new LoginResponse
+        {
+            AccessToken = accessToken,
+            TokenType = "Bearer",
+            ExpiresIn = _jwtService.GetExpirationInSeconds(),
+            User = authenticatedUser
+        };
 
     }
 }
