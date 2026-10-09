@@ -8,13 +8,15 @@
 <b>Enterprise Full Stack Platform built with ASP.NET Core 9 and Angular 20</b>
 </p>
 
-<p align="center">ASP.NET Core 9 • Angular 20 • SQL Server • Entity Framework Core • JWT</p>
+<p align="center">
+ASP.NET Core 9 • Angular 20 • SQL Server • Entity Framework Core • JWT • Angular Material
+</p>
 
 ---
 
 ORIGEN is a modern enterprise Full Stack platform developed to demonstrate production-ready software architecture using **ASP.NET Core 9**, **Angular 20**, **Entity Framework Core**, **SQL Server**, and **JWT Authentication**.
 
-The project focuses on clean architecture, modularity, maintainability, secure authentication, and enterprise software development best practices.
+The project focuses on clean architecture, modularity, maintainability, secure authentication, role-based authorization, and enterprise software development best practices.
 
 ---
 
@@ -24,10 +26,10 @@ The project focuses on clean architecture, modularity, maintainability, secure a
 |--------|--------------|
 | Backend | .NET 9, ASP.NET Core |
 | Frontend | Angular 20, Angular Material |
-| Security | JWT Authentication, BCrypt |
+| Security | JWT Authentication, BCrypt, Role-Based Authorization |
 | Persistence | Entity Framework Core |
 | Database | SQL Server 2022 |
-| Documentation | OpenAPI / Swagger |
+| API Documentation | OpenAPI / Swagger |
 | Build | .NET CLI |
 
 ---
@@ -43,9 +45,16 @@ The project focuses on clean architecture, modularity, maintainability, secure a
 - SQL Server
 - JWT Authentication
 - Role-Based Access Control (RBAC)
-- Swagger / OpenAPI
-- Clean Architecture
+- User Management CRUD
+- Automatic `USER` role assignment
+- Protected REST API endpoints
+- Swagger / OpenAPI with Bearer Authentication
+- Auditing with `CreatedAt` and `UpdatedAt`
+- Dependency Injection
 - SOLID Principles
+- Clean Code
+- Conventional Commits
+- Git Flow
 
 ---
 
@@ -58,10 +67,11 @@ The project focuses on clean architecture, modularity, maintainability, secure a
 | Authorization (RBAC) | ✅ Completed |
 | Angular Integration | ✅ Completed |
 | Login Module | ✅ Completed |
+| User Management | ✅ Completed |
 | Dashboard Structure | 🚧 In Progress |
-| User Management | 📋 Planned |
 | Role Management | 📋 Planned |
 | Permission Management | 📋 Planned |
+| Refresh Token | 📋 Planned |
 | Docker Support | 📋 Planned |
 | CI/CD | 📋 Planned |
 
@@ -87,6 +97,8 @@ Modern authentication interface built with Angular 20 and Angular Material.
 
 Interactive REST API documentation generated using OpenAPI.
 
+Swagger supports Bearer Authentication, allowing protected endpoints to be tested using JWT access tokens.
+
 ---
 
 # Architecture
@@ -95,7 +107,9 @@ Interactive REST API documentation generated using OpenAPI.
     <img src="docs/images/architecture.png" width="100%" alt="Architecture">
 </p>
 
-ORIGEN follows a modular architecture where each feature owns its controllers, services, repositories, DTOs and entities, promoting maintainability, scalability and separation of concerns.
+ORIGEN follows a modular architecture where each feature owns its controllers, services, repositories and DTOs, promoting maintainability, scalability and separation of concerns.
+
+The backend is organized by modules, following a structure inspired by enterprise applications and modular monolith architectures.
 
 ---
 
@@ -108,17 +122,46 @@ ORIGEN follows a modular architecture where each feature owns its controllers, s
 - Entity Framework Core
 - Dependency Injection
 - Configuration using Options Pattern
+- Global exception handling
+- Modular application structure
+- Auditable entities
 
-## Security
+## Authentication & Authorization
 
 - JWT Authentication
-- BCrypt Password Encryption
+- BCrypt password hashing
 - Role-Based Access Control (RBAC)
+- `ADMIN` and `USER` roles
+- Role claims included in JWT
+- Protected API endpoints
+- HTTP `401 Unauthorized` for unauthenticated requests
+- HTTP `403 Forbidden` for unauthorized roles
+
+## User Management
+
+User management is implemented through a REST API with the following operations:
+
+- Get all users
+- Get user by ID
+- Create user
+- Update user
+- Delete user
+
+New users are automatically assigned the `USER` role.
+
+Passwords are never returned through API responses.
 
 ## Database
 
 - SQL Server 2022
+- Entity Framework Core
 - Entity Framework Core Migrations
+- Relational authorization model
+- Roles
+- Permissions
+- User-role relationships
+- Role-permission relationships
+- Audit fields
 
 ## Frontend
 
@@ -128,6 +171,26 @@ ORIGEN follows a modular architecture where each feature owns its controllers, s
 - Route Guards
 - JWT Interceptor
 - Initial Dashboard Structure
+
+---
+
+# API Endpoints
+
+## Authentication
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| POST | `/api/v1/auth/login` | Authenticate user | Public |
+
+## Users
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| GET | `/api/v1/users` | Get all users | `ADMIN` |
+| GET | `/api/v1/users/{id}` | Get user by ID | Authenticated |
+| POST | `/api/v1/users` | Create user | Authenticated |
+| PUT | `/api/v1/users/{id}` | Update user | Authenticated |
+| DELETE | `/api/v1/users/{id}` | Delete user | Authenticated |
 
 ---
 
@@ -145,13 +208,13 @@ cd origen-dotnet
 
 ## 2. Configure the Backend
 
-Copy
+Copy:
 
 ```text
 backend/src/Origen.Api/appsettings.Development.example.json
 ```
 
-to
+to:
 
 ```text
 backend/src/Origen.Api/appsettings.Development.json
@@ -180,9 +243,9 @@ dotnet ef database update
 dotnet run
 ```
 
-Backend
+Backend:
 
-```
+```text
 https://localhost:7225
 ```
 
@@ -198,27 +261,29 @@ npm install
 ng serve
 ```
 
-Frontend
+Frontend:
 
-```
+```text
 http://localhost:4200
 ```
 
 ---
 
-## Default Credentials
+# Default Credentials
 
 | Username | Password |
 |----------|----------|
 | admin | Admin123* |
 
+The default administrator account is created during application startup when bootstrap configuration is enabled.
+
 ---
 
-## API Documentation
+# API Documentation
 
-Swagger UI
+Swagger UI:
 
-```
+```text
 https://localhost:7225/swagger
 ```
 
@@ -232,6 +297,26 @@ ORIGEN
 ├── backend
 │   └── src
 │       └── Origen.Api
+│           ├── Controllers
+│           ├── Data
+│           ├── Extensions
+│           └── Modules
+│               ├── Auth
+│               │   ├── Bootstrap
+│               │   ├── Configurations
+│               │   ├── Controllers
+│               │   ├── DTOs
+│               │   ├── Entities
+│               │   ├── Repositories
+│               │   ├── Security
+│               │   └── Services
+│               │
+│               └── Users
+│                   ├── Controllers
+│                   ├── DTO
+│                   │   ├── Requests
+│                   │   └── Responses
+│                   └── Services
 │
 ├── frontend
 │
@@ -252,11 +337,18 @@ ORIGEN
 - ASP.NET Core Foundation
 - Entity Framework Core
 - SQL Server Integration
+- Database Migrations
 - JWT Authentication
 - RBAC Authorization
+- Role Management foundation
+- Permission Management foundation
 - Swagger Documentation
+- Bearer Authentication in Swagger
 - Angular Integration
 - Login Module
+- User Management CRUD
+- Automatic `USER` role assignment
+- API auditing
 
 ---
 
@@ -264,14 +356,15 @@ ORIGEN
 
 - Dashboard Module
 - Frontend Navigation
+- Frontend User Management
 
 ---
 
 ## Planned
 
-- User Management
-- Role Management
-- Permission Management
+- Permission-based authorization policies
+- Role Management UI
+- Permission Management UI
 - Refresh Token
 - Docker Support
 - Docker Compose
@@ -284,13 +377,16 @@ ORIGEN
 
 # Development Practices
 
-- Clean Architecture
-- SOLID Principles
 - Modular Monolith
+- Clean Architecture principles
+- SOLID Principles
 - REST API Design
+- Dependency Injection
+- DTO-based API design
 - Conventional Commits
 - Git Flow
 - Clean Code
+- Separation of Concerns
 
 ---
 

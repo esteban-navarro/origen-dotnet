@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Constants\" />
+    <Folder Include="Modules\Users\Repository\" />
   </ItemGroup>
 
 </Project>

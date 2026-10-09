@@ -30,6 +30,21 @@ public class JwtService : IJwtService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         ];
 
+        claims.AddRange(
+            user.UserRoles
+                .Select(ur => new Claim(
+                    ClaimTypes.Role,
+                    ur.Role.Name))
+                .DistinctBy(c => c.Value));
+
+        claims.AddRange(
+            user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(rp => new Claim(
+                    "permission",
+                    rp.Permission.Name))
+                .DistinctBy(c => c.Value));
+
         JwtSecurityToken token = new(
             issuer: _options.Issuer,
             audience: _options.Audience,

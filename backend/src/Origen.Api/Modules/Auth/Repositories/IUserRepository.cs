@@ -4,6 +4,10 @@ namespace Origen.Api.Modules.Auth.Repositories;
 
 public interface IUserRepository
 {
+    Task<List<User>> GetAllAsync();
+
+    Task<User?> GetByIdAsync(Guid id);
+
     Task<User?> FindByUsernameAsync(string username);
 
     Task<User?> FindByEmailAsync(string email);
@@ -13,4 +17,11 @@ public interface IUserRepository
     Task<bool> ExistsByEmailAsync(string email);
 
     Task AddAsync(User user);
+
+    Task<User> CreateAsync(User user);
+
+    Task UpdateAsync(User user);
+
+    Task DeleteAsync(User user);
+
 }
