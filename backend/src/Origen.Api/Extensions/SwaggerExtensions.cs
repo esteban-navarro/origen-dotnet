@@ -12,7 +12,7 @@ public static class SwaggerExtensions
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "ORIGEN API",
-                Version = "v1.0.0",
+                Version = "v1.1.0",
                 Description = "Modern Enterprise REST API built with ASP.NET Core 9.",
                 License = new OpenApiLicense
                 {
@@ -20,6 +20,20 @@ public static class SwaggerExtensions
                     Url = new Uri("https://opensource.org/licenses/MIT")
                 }
             });
+
+            options.AddSecurityDefinition(
+                "Bearer",
+                new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter a valid JWT token."
+                });
+
+            options.OperationFilter<AuthorizeCheckOperationFilter>();
         });
 
         return services;
